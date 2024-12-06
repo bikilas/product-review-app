@@ -7,10 +7,11 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "start": "tsc && node dist/index.js",
+    "start": "vite preview",
     "postcss": "ts-node -O '{\"module\":\"CommonJS\"}' postcss.config.ts"
   },
   "devDependencies": {
+    "@types/node": "^22.10.1",
     "@types/react": "^18.3.13",
     "@types/react-dom": "^18.3.1",
     "@types/react-router-dom": "^5.3.3",

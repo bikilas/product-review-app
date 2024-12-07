@@ -1,48 +1,16 @@
 {
   "compilerOptions": {
-    "jsx": "react",
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "node",
-    "isolatedModules": true,
-    "moduleDetection": "force",
-
-    /* Node.js-specific */
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
-
-    /* Output settings */
-    "outDir": "dist",
-    "rootDir": ".", // Allow files from the root directory
-    "noEmit": false,
-
-    /* Additional settings */
-    "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".", // Required for path aliases
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "target": "esnext",                         // Set to esnext for better compatibility with modern browsers
+    "module": "esnext",                         // Use ES modules
+    "moduleResolution": "node",                 // Resolve modules in a Node.js style
+    "jsx": "react-jsx",                        // Use the JSX transform for React 17+
+    "strict": true,                             // Enable strict type checking options
+    "esModuleInterop": true,                    // Allow default imports from non-ES modules
+    "skipLibCheck": true                        // Skip type checking of declaration files
   },
   "include": [
-    "src/**/*", // Source files
-    "postcss.config.ts", // Type-checking configuration files
-    "vite.config.ts"
+    "src/**/*",                                // Include all files in the src folder
+    "src/assets.d.ts"                          // Include the assets declaration file
   ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "exclude": ["node_modules"]                   // Exclude node_modules folder
 }

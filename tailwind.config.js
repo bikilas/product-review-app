@@ -1,12 +1,19 @@
-/** @type {import('tailwindcss').Config} */
-export default {
+const plugin = require('tailwindcss/plugin');
+
+module.exports = {
   content: [
-    './index.html',
-    './src/**/*.{js,jsx,ts,tsx}', 
+    "./src/**/*.{html,js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {},
   },
-  plugins: [],
-}
-
+  plugins: [
+    plugin(function({ addUtilities }) {
+      addUtilities({
+        '.my-utility': {
+          property: 'value',
+        },
+      });
+    }),
+  ],
+};

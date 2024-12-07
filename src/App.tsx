@@ -11,15 +11,18 @@ import UpdateProduct from './components/UpdateProduct';
 import DeleteProduct from './components/DeleteProduct';
 import { Product } from './types';
 
+const someModule = require('some-module');
+
 // Import images and other assets
-import product1Image from './assets/img/product-1.png';
-import product2Image from './assets/img/product-2.png';
-import product3Image from './assets/img/product-3.png';
-import product4Image from './assets/img/product-4.png';
-import product5Image from './assets/img/product-5.png';
-import product6Image from './assets/img/product-6.png';
-import product7Image from './assets/img/product-7.png';
-import product8Image from './assets/img/product-8.png';
+// import product1Image from './assets/img/product.png';
+// import product2Image from './assets/img/product-2.png';
+// import product3Image from './assets/img/product-3.png';
+// import product4Image from './assets/img/product-4.png';
+// import product5Image from './assets/img/product-5.png';
+// import product6Image from './assets/img/product-6.png';
+// import product7Image from './assets/img/product-7.png';
+// import product8Image from './assets/img/product-8.png';
+
 
 const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -37,63 +40,85 @@ const App: React.FC = () => {
       title: 'Smartphone',
       price: 699.99,
       description: 'High-end smartphone.',
-      imageUrl: product1Image,
+      imageUrl: './assets/img/product.png',
+      name: 'Iphone',
+      category: 'Z',
     },
     {
       id: 2,
       title: 'Laptop',
       price: 1299.99,
       description: 'Professional laptop.',
-      imageUrl: product2Image,
+      imageUrl:'./assets/img/product-2.png' ,
+      name: 'PC',
+      category: 'A',
     },
     {
       id: 3,
       title: 'Headphones',
       price: 199.99,
       description: 'Noise-cancelling headphones.',
-      imageUrl: product3Image,
+      imageUrl: './assets/img/product-3.png',
+      name: 'Headphones',
+      category: 'B',
     },
     {
       id: 4,
       title: 'SmartBag',
       price: 140.99,
       description: 'Chic and versatile accessory with integrated technology.',
-      imageUrl: product4Image,
+      imageUrl: './assets/img/product-4.png',
+      name: 'Bag',
+      category: 'C',
     },
     {
       id: 5,
       title: 'SmartDress',
       price: 399.99,
       description: 'Fashionable dress with LED lighting and health sensors.',
-      imageUrl: product5Image,
+      imageUrl: './assets/img/product-5.png',
+      name: 'Dress',
+      category: 'D',
     },
     {
       id: 6,
       title: 'SmartShoes',
       price: 899.99,
       description: 'Innovative shoes with fitness tracking and app connectivity.',
-      imageUrl: product6Image,
+      imageUrl: './assets/img/product-6.png',
+      name: 'Shoes',
+      category: 'E',
     },
     {
       id: 7,
       title: 'SmartT-shirt',
       price: 49.99,
       description: 'Comfortable T-shirt with smart features.',
-      imageUrl: product7Image,
+      imageUrl: './assets/img/product-7.png',
+      name: 'T-shirt',
+      category: 'F',
     },
     {
       id: 8,
       title: 'Gym Wears',
       price: 349.99,
       description: 'Durable activewear with ergonomic fits.',
-      imageUrl: product8Image,
+      imageUrl: './assets/img/product-8.png',
+      name: 'gym',
+      category: 'H',
     },
   ];
 
-  // Filter products based on search term
-  const filteredProducts = productList.filter((product) =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter products based on search term and filters
+  const filteredProducts = productList.filter((product) => {
+    const matchesSearchTerm = product.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = filters.category ? product.category === filters.category : true;
+    const matchesPrice = product.price >= filters.minPrice && product.price <= filters.maxPrice;
+
+    return matchesSearchTerm && matchesCategory && matchesPrice;
+  });
+
+  const navigate = useNavigate();
 
   return (
     <Router>
@@ -115,8 +140,12 @@ const App: React.FC = () => {
 
             {/* Desktop Menu */}
             <div className="hidden md:flex space-x-4">
-              <Link to="/" className="text-blue-500 hover:text-blue-700">Home</Link>
-              <Link to="/create" className="text-blue-500 hover:text-blue-700">Create Product</Link>
+              <Link to="/" className="text-blue-500 hover:text-blue-700">
+                Home
+              </Link>
+              <Link to="/create" className="text-blue-500 hover:text-blue-700">
+                Create Product
+              </Link>
             </div>
           </div>
 
@@ -151,10 +180,8 @@ const App: React.FC = () => {
                   <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                   <ProductFilters filters={filters} setFilters={setFilters} />
                   <ProductList
-                    products={filteredProducts} 
-                    onSelect={(product: Product) => {
-                      window.location.href = `/products/${product.id}`;
-                    }}
+                    products={filteredProducts}
+                    onSelect={(product: Product) => navigate(`/products/${product.id}`)}
                   />
                 </>
               }
@@ -182,10 +209,7 @@ const App: React.FC = () => {
             />
 
             {/* Review Page */}
-            <Route
-              path="/products/:id/review"
-              element={<ProductReview />}
-            />
+            <Route path="/products/:id/review" element={<ProductReview />} />
           </Routes>
         </div>
       </div>
@@ -193,23 +217,29 @@ const App: React.FC = () => {
   );
 };
 
-// Wrapper for Update Product to pass product details
+// Wrapper for Update Product
 const UpdateProductWrapper: React.FC<{ productList: Product[] }> = ({ productList }) => {
   const { id } = useParams<{ id: string }>();
   const productId = parseInt(id || '', 10);
-  const product = productList.find((p) => p.id === productId);
-  return product ? <UpdateProduct productId={productId} /> : <p>Product not found.</p>;
+  return productList.find((p) => p.id === productId) ? (
+    <UpdateProduct productId={productId} />
+  ) : (
+    <p>Product not found.</p>
+  );
 };
 
-// Wrapper for Delete Product to pass product details
+// Wrapper for Delete Product
 const DeleteProductWrapper: React.FC<{ productList: Product[] }> = ({ productList }) => {
   const { id } = useParams<{ id: string }>();
   const productId = parseInt(id || '', 10);
-  const product = productList.find((p) => p.id === productId);
-  return product ? <DeleteProduct productId={productId} /> : <p>Product not found.</p>;
+  return productList.find((p) => p.id === productId) ? (
+    <DeleteProduct productId={productId} />
+  ) : (
+    <p>Product not found.</p>
+  );
 };
 
-// Wrapper for Product Detail to pass product details
+// Wrapper for Product Detail
 const ProductDetailWithParams: React.FC<{ productList: Product[] }> = ({ productList }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
